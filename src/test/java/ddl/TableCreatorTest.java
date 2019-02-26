@@ -6,6 +6,8 @@ import exception.DDLException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+
 public class TableCreatorTest {
     @Test(expected = DDLException.class)
     public void testGetTableNameShouldThrowExceptionInTableCreator() {
@@ -22,10 +24,10 @@ public class TableCreatorTest {
     }
 
     @Test
-    public void testGetPK() {
+    public void testGetPK() throws NoSuchFieldException {
         TableCreator tableCreator = new TableCreator();
-        String primaryKey = tableCreator.getPK(Test.class);
-        Assert.assertEquals("Primary Key", "id", primaryKey);
+        Field primaryKey = tableCreator.getPrimaryKeyField(Test.class);
+        Assert.assertEquals("Primary Key Field", Test.class.getField("a"), primaryKey);
     }
 
 }

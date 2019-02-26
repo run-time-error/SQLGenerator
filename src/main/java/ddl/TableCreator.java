@@ -35,15 +35,16 @@ public class TableCreator {
     }
 
 
-    public<T> String getPK(Class<T> classObject) {
-//        return Arrays.stream(classObject.getDeclaredFields())
-//                .filter(primaryKeyPredicate)
-//                .map(t-> Pair.of(t, t.getDeclaredAnnotation()))
-//                .findFirst()
-//                .orElseThrow(()->new DDLException("No Primary Key Found in " + ))
-//                ;
-        return null;
-
+    public<T> Field getPrimaryKeyField(Class<T> classObject) {
+        List<Field> primaryKeyFields =  Arrays.stream(classObject.getDeclaredFields())
+                .filter(primaryKeyPredicate)
+                .collect(Collectors.toList());
+        if(primaryKeyFields.isEmpty()){
+            throw new DDLException("No Field found having Primary key property in "+classObject);
+        }else if(primaryKeyFields.size()>1){
+            throw new DDLException("Multiple Fields found having Primary key property in "+classObject);
+        }
+        return primaryKeyFields.get(0);
     }
 
     private <T>List<Pair<Field, List<Annotation>>> getPairOfFieldAndAnnotaions(Class<T> classObject) {
