@@ -43,7 +43,7 @@ public class TableCreatorTest {
     @Test
     public void testCreateTableSQL () {
         TableCreator tableCreator = new TableCreator();
-        String sql = tableCreator.getCreateTableSQL();
+        String sql = tableCreator.getCreateTableSQL(Test.class);
         Assert.assertNotNull("Create Table SQL: ", sql);
     }
 
