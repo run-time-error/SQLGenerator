@@ -40,4 +40,11 @@ public class TableCreatorTest {
         Assert.assertEquals("Map Size: ", map2.size(), 0);
     }
 
+    @Test
+    public void testCreateTableSQL () {
+        TableCreator tableCreator = new TableCreator();
+        String sql = tableCreator.getCreateTableSQL();
+        Assert.assertNotNull("Create Table SQL: ", sql);
+    }
+
 }

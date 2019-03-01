@@ -37,4 +37,8 @@ class TableCreator {
                 .collect(Collectors.toMap(t->t, t->t.getDeclaredAnnotation(Column.class)));
 
     }
+
+    String getCreateTableSQL() {
+        return null;
+    }
 }
