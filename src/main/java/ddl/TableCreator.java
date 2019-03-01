@@ -3,23 +3,19 @@ package ddl;
 import annotations.Column;
 import annotations.Table;
 import exception.DDLException;
-import utitlity.Pair;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.List;
-import java.util.function.Predicate;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class TableCreator {
+class TableCreator {
     /***
-     *
-     * @param classObject
-     * @param <T>
+     * @param <T> The Parameter type
+     * @param classObject The Class Object to get the table name info from.
      * @return Table Name provided inside Table Annotation above the param classObject declaration.
      */
-    public<T> String getTableName(Class<T> classObject) {
+    <T> String getTableName(Class<T> classObject) {
         Table table = classObject.getDeclaredAnnotation(Table.class);
         String tableName;
         if(table == null) {
@@ -35,26 +31,10 @@ public class TableCreator {
     }
 
 
-    public<T> Field getPrimaryKeyField(Class<T> classObject) {
-        List<Field> primaryKeyFields =  Arrays.stream(classObject.getDeclaredFields())
-                .filter(primaryKeyPredicate)
-                .collect(Collectors.toList());
-        if(primaryKeyFields.isEmpty()){
-            throw new DDLException("No Field found having Primary key property in "+classObject);
-        }else if(primaryKeyFields.size()>1){
-            throw new DDLException("Multiple Fields found having Primary key property in "+classObject);
-        }
-        return primaryKeyFields.get(0);
-    }
-
-    private <T>List<Pair<Field, List<Annotation>>> getPairOfFieldAndAnnotaions(Class<T> classObject) {
+    <T> Map<Field, Column> getAllColumns(Class<T> classObject) {
         return Arrays.stream(classObject.getDeclaredFields())
-                .peek(t->t.setAccessible(true))
-                .map(t->Pair.of(t, Arrays.stream(t.getDeclaredAnnotations()).collect(Collectors.toList())))
-                .collect(Collectors.toList());
+                .filter(t->t.getDeclaredAnnotation(Column.class) != null)
+                .collect(Collectors.toMap(t->t, t->t.getDeclaredAnnotation(Column.class)));
+
     }
-    private Predicate<Field> primaryKeyPredicate = t-> {
-        Column column = t.getDeclaredAnnotation(Column.class);
-        return column!=null && column.isPK();
-    };
 }

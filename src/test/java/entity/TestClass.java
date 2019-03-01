@@ -7,4 +7,6 @@ import annotations.Table;
 public class TestClass {
     @Column(value = "id" , isPK=true)
     int a;
+
+    double b;
 }
